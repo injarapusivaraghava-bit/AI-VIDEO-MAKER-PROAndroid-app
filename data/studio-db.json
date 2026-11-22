@@ -1,0 +1,252 @@
+{
+  "projects": [
+    {
+      "id": "proj-cartoon-rabbit",
+      "title": "చిట్టి కుందేలు & తెలివైన తాబేలు",
+      "mode": "cartoon-maker",
+      "style": "cartoon",
+      "aspectRatio": "16:9",
+      "contentLanguage": "bilingual",
+      "prompt": "పిల్లల కోసం చిట్టి కుందేలు మరియు తెలివైన తాబేలు స్నేహ కథ",
+      "voiceName": "Kore",
+      "voiceStyle": "cartoon",
+      "musicTrack": "kids-playful",
+      "musicVolume": 0.25,
+      "voiceVolume": 1,
+      "subtitleStyle": "cinema",
+      "exportCount": 3,
+      "createdAt": "2026-11-21T07:40:29.374Z",
+      "updatedAt": "2026-11-21T07:40:29.374Z",
+      "youtubeSeo": {
+        "title": "చిట్టి కుందేలు మరియు తెలివైన తాబేలు | Telugu Kids Cartoon Moral Story",
+        "description": "అందమైన అడవిలో చిట్టి కుందేలు మరియు తెలివైన తాబేలు ఎలా స్నేహితులు అయ్యాయో చూడండి. పిల్లల కోసం నీతి కథ!",
+        "tags": [
+          "Telugu Stories",
+          "Kids Cartoon",
+          "Moral Stories Telugu",
+          "AI Cartoon Video"
+        ],
+        "hashtags": [
+          "#TeluguStories",
+          "#KidsCartoon",
+          "#TeluguMoralStories"
+        ],
+        "thumbnailHook": "అడవిలో అద్భుతమైన స్నేహం!",
+        "uploadedStatus": "ready"
+      },
+      "scenes": [
+        {
+          "id": "sc-1",
+          "title": "అడవి ఉదయం (Forest Morning)",
+          "narration": "పచ్చని అడవిలో ఒక చిట్టి కుందేలు, తెలివైన తాబేలు మంచి స్నేహితులుగా ఉండేవి.",
+          "subtitleTe": "పచ్చని అడవిలో చిట్టి కుందేలు, తెలివైన తాబేలు స్నేహితులుగా ఉండేవి.",
+          "subtitleEn": "In a lush green forest, a little rabbit and a wise turtle were best friends.",
+          "durationSec": 5,
+          "cameraMotion": "zoom-in",
+          "weatherFx": "golden-dust",
+          "backdropType": "template",
+          "imageUrl": "/src/assets/images/studio_cartoon_jungle_1795115468069.jpg",
+          "palette": {
+            "skyTop": "#38BDF8",
+            "skyBottom": "#BAE6FD",
+            "ground": "#15803D",
+            "accent": "#FBBF24"
+          },
+          "cartoonElements": {
+            "character": "rabbit",
+            "secondaryCharacter": "turtle",
+            "setting": "forest",
+            "mood": "sunny"
+          }
+        },
+        {
+          "id": "sc-2",
+          "title": "చిరు జల్లు సమస్య (Sudden Stream)",
+          "narration": "ఒకరోజు పెద్ద వర్షం రావడంతో వాగు పొంగింది. కుందేలు భయపడింది.",
+          "subtitleTe": "పెద్ద వర్షం రావడంతో వాగు పొంగి, కుందేలు భయపడింది.",
+          "subtitleEn": "When heavy rain swelled the stream, the little rabbit grew worried.",
+          "durationSec": 5,
+          "cameraMotion": "bounce-cartoon",
+          "weatherFx": "rain",
+          "backdropType": "procedural",
+          "palette": {
+            "skyTop": "#1E293B",
+            "skyBottom": "#475569",
+            "ground": "#14532D",
+            "accent": "#38BDF8"
+          },
+          "cartoonElements": {
+            "character": "rabbit",
+            "secondaryCharacter": "owl",
+            "setting": "forest",
+            "mood": "night"
+          }
+        },
+        {
+          "id": "sc-3",
+          "title": "తాబేలు సాయం (Turtle Rescue)",
+          "narration": "తెలివైన తాబేలు తన బలమైన చిప్పపై కుందేలును ఎక్కించుకుని సురక్షితంగా అవతలికి చేర్చింది.",
+          "subtitleTe": "తాబేలు కుందేలును సురక్షితంగా ఒడ్డుకు చేర్చింది.",
+          "subtitleEn": "The wise turtle carried the rabbit safely across the sparkling stream.",
+          "durationSec": 5,
+          "cameraMotion": "pan-right",
+          "weatherFx": "fireflies",
+          "backdropType": "procedural",
+          "palette": {
+            "skyTop": "#F59E0B",
+            "skyBottom": "#FDE68A",
+            "ground": "#166534",
+            "accent": "#F97316"
+          },
+          "cartoonElements": {
+            "character": "turtle",
+            "secondaryCharacter": "rabbit",
+            "setting": "forest",
+            "mood": "sunset"
+          }
+        }
+      ]
+    },
+    {
+      "id": "proj-kakinada-short",
+      "title": "అద్భుతమైన పల్లె & తీర ప్రయాణం (Shorts)",
+      "mode": "text-to-video",
+      "style": "realistic",
+      "aspectRatio": "9:16",
+      "contentLanguage": "bilingual",
+      "prompt": "ఆంధ్రప్రదేశ్ అందమైన తీర ప్రాంతం మరియు పల్లెటూరి సాయంత్రం పై 9:16 యూట్యూబ్ షార్ట్",
+      "voiceName": "Charon",
+      "voiceStyle": "documentary",
+      "musicTrack": "cinematic-dawn",
+      "musicVolume": 0.3,
+      "voiceVolume": 1,
+      "subtitleStyle": "shorts-pop",
+      "exportCount": 1,
+      "createdAt": "2026-11-21T07:40:29.374Z",
+      "updatedAt": "2026-11-21T07:40:29.374Z",
+      "youtubeSeo": {
+        "title": "మన తెలుగు ప్రకృతి అందాలు | Cinematic Telugu Travel Short",
+        "description": "సూర్యోదయం నుండి సంధ్యా దీపాల వరకు మన తెలుగు నేల సౌందర్యాన్ని ఈ 60 సెకన్ల వీడియోలో చూడండి.",
+        "tags": [
+          "Telugu Shorts",
+          "Andhra Pradesh",
+          "Travel Cinema",
+          "AI Video"
+        ],
+        "hashtags": [
+          "#TeluguShorts",
+          "#Kakinada",
+          "#CinematicIndia"
+        ],
+        "thumbnailHook": "ప్రకృతి మాయాజాలం!",
+        "uploadedStatus": "draft"
+      },
+      "scenes": [
+        {
+          "id": "sh-1",
+          "title": "గిరి శిఖర సూర్యాస్తమయం",
+          "narration": "ప్రయాణం ఎప్పుడూ ఒక చిన్న దీపపు వెలుగుతోనే మొదలవుతుంది.",
+          "subtitleTe": "ప్రయాణం ఎప్పుడూ ఒక చిన్న దీపపు వెలుగుతోనే మొదలవుతుంది.",
+          "subtitleEn": "Every great journey begins with a single lantern above the clouds.",
+          "durationSec": 5,
+          "cameraMotion": "zoom-in",
+          "weatherFx": "stars",
+          "backdropType": "template",
+          "imageUrl": "/src/assets/images/studio_shorts_portrait_1795115467460.jpg",
+          "palette": {
+            "skyTop": "#0F172A",
+            "skyBottom": "#312E81",
+            "ground": "#1E293B",
+            "accent": "#F59E0B"
+          },
+          "cartoonElements": {
+            "character": "none",
+            "setting": "mountains",
+            "mood": "night"
+          }
+        },
+        {
+          "id": "sh-2",
+          "title": "నదీ తీర దీపాలు",
+          "narration": "సాయంత్రం వేళ గోదావరి తీరంలో వెలిగే దీపాలు మనసుకు ప్రశాంతతను ఇస్తాయి.",
+          "subtitleTe": "సాయంత్రం వేళ నదీ తీర దీపాలు మనసుకు ప్రశాంతతను ఇస్తాయి.",
+          "subtitleEn": "At dusk, oil lamps along the riverside bring timeless peace.",
+          "durationSec": 5,
+          "cameraMotion": "ken-burns",
+          "weatherFx": "fireflies",
+          "backdropType": "template",
+          "imageUrl": "/src/assets/images/studio_telugu_village_1795115467329.jpg",
+          "palette": {
+            "skyTop": "#1E1B4B",
+            "skyBottom": "#9A3412",
+            "ground": "#0F172A",
+            "accent": "#FBBF24"
+          },
+          "cartoonElements": {
+            "character": "none",
+            "setting": "village",
+            "mood": "sunset"
+          }
+        }
+      ]
+    }
+  ],
+  "adminSettings": {
+    "studioName": "AI VIDEO MAKER PRO",
+    "proprietorName": "Injarapu Siva Raghava",
+    "freeDailyLimit": 25,
+    "watermarkEnabled": false,
+    "watermarkText": "AI VIDEO MAKER PRO",
+    "enableCartoon": true,
+    "enableRealistic": true,
+    "enableImageToVideo": true,
+    "pricingMode": "free-starter",
+    "proMonthlyInr": 199,
+    "maintenanceMode": false,
+    "adminPin": "1234"
+  },
+  "usageStats": {
+    "totalStoryboards": 6,
+    "totalVoices": 1,
+    "totalExports": 4,
+    "totalYouTubePreps": 1,
+    "todayCount": 4,
+    "lastResetDate": "2026-11-21",
+    "totalGames": 1
+  },
+  "games": [
+    {
+      "id": "game-farmer-harvest",
+      "title": "రైతు పంట రక్షణ (Farmer Harvest Runner)",
+      "genre": "platformer",
+      "prompt": "Telugu village farmer jumping over rocks and collecting golden grain harvests",
+      "storyTe": "పచ్చని పల్లె పొలాల్లో రైతు అడ్డంకులను దాటుకుంటూ బంగారు ధాన్యాన్ని సేకరించే ఆట.",
+      "storyEn": "Help the village farmer leap over obstacles and collect golden grain bundles.",
+      "instructions": "Arrow keys / Jump button to leap over crows & rocks and grab grain.",
+      "heroEmoji": "🧑‍🌾",
+      "enemyEmoji": "🐦",
+      "collectibleEmoji": "🌾",
+      "heroColor": "#F59E0B",
+      "enemyColor": "#EF4444",
+      "bgTop": "#0F172A",
+      "bgBottom": "#14532D",
+      "speed": 4,
+      "winScore": 100,
+      "createdAt": "2026-11-21T10:41:11.112Z",
+      "updatedAt": "2026-11-21T10:41:11.112Z"
+    }
+  ],
+  "assets": [],
+  "users": [
+    {
+      "id": "proprietor-1",
+      "label": "Injarapu Siva Raghava (Proprietor)",
+      "email": "injarapusivaraghava@gmail.com",
+      "role": "admin",
+      "status": "active",
+      "lastActive": "2026-11-21T10:41:11.113Z"
+    }
+  ],
+  "generationLogs": [],
+  "errorLogs": []
+}

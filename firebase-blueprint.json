@@ -1,0 +1,342 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Publicly minimal authenticated creator workspace record (no PII).",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "photoURL": {
+          "type": "string",
+          "maxLength": 512
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "displayName", "createdAt", "updatedAt"]
+    },
+    "UserPrivateInfo": {
+      "title": "UserPrivateInfo",
+      "description": "Isolated PII record containing user email address.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 254
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "email", "updatedAt"]
+    },
+    "AdminRecord": {
+      "title": "AdminRecord",
+      "description": "Trusted administrator role lookup record.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["admin"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "role", "createdAt"]
+    },
+    "VideoProject": {
+      "title": "VideoProject",
+      "description": "Creator AI video storyboard project saved under user workspace.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "mode": {
+          "type": "string",
+          "enum": ["text-to-video", "image-to-video", "cartoon-maker", "story-maker"]
+        },
+        "style": {
+          "type": "string",
+          "enum": ["cartoon", "realistic", "anime", "3d-render", "devotional", "explainer"]
+        },
+        "aspectRatio": {
+          "type": "string",
+          "enum": ["16:9", "9:16"]
+        },
+        "targetDurationSec": {
+          "type": "integer"
+        },
+        "contentLanguage": {
+          "type": "string",
+          "enum": ["te", "en", "bilingual"]
+        },
+        "prompt": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "voiceName": {
+          "type": "string",
+          "enum": ["Kore", "Puck", "Charon", "Fenrir", "Zephyr"]
+        },
+        "voiceStyle": {
+          "type": "string",
+          "enum": ["storyteller", "cartoon", "documentary", "energetic"]
+        },
+        "musicTrack": {
+          "type": "string",
+          "enum": [
+            "none",
+            "cinematic-dawn",
+            "kids-playful",
+            "devotional-flute",
+            "shorts-beat",
+            "calm-documentary"
+          ]
+        },
+        "musicVolume": {
+          "type": "number"
+        },
+        "voiceVolume": {
+          "type": "number"
+        },
+        "subtitleStyle": {
+          "type": "string",
+          "enum": ["cinema", "shorts-pop", "minimal", "off"]
+        },
+        "scenes": {
+          "type": "array",
+          "description": "Bounded storyboard scene definitions (max 15 scenes, binary audio excluded)."
+        },
+        "youtubeSeo": {
+          "type": "object",
+          "description": "Optional YouTube SEO title, description, tags, and upload status."
+        },
+        "exportCount": {
+          "type": "integer"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "ownerId",
+        "title",
+        "mode",
+        "style",
+        "aspectRatio",
+        "contentLanguage",
+        "prompt",
+        "voiceName",
+        "voiceStyle",
+        "musicTrack",
+        "musicVolume",
+        "voiceVolume",
+        "subtitleStyle",
+        "scenes",
+        "exportCount",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "UserUsageStats": {
+      "title": "UserUsageStats",
+      "description": "Per-user AI generation and video export counters.",
+      "type": "object",
+      "properties": {
+        "ownerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "totalStoryboards": {
+          "type": "integer"
+        },
+        "totalVoices": {
+          "type": "integer"
+        },
+        "totalExports": {
+          "type": "integer"
+        },
+        "totalYouTubePreps": {
+          "type": "integer"
+        },
+        "todayCount": {
+          "type": "integer"
+        },
+        "lastResetDate": {
+          "type": "string",
+          "maxLength": 20
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "ownerId",
+        "totalStoryboards",
+        "totalVoices",
+        "totalExports",
+        "totalYouTubePreps",
+        "todayCount",
+        "lastResetDate",
+        "updatedAt"
+      ]
+    },
+    "StudioPublicConfig": {
+      "title": "StudioPublicConfig",
+      "description": "Admin-managed studio settings and quota configuration.",
+      "type": "object",
+      "properties": {
+        "studioName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "proprietorName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "adminNote": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "freeDailyLimit": {
+          "type": "integer"
+        },
+        "watermarkEnabled": {
+          "type": "boolean"
+        },
+        "watermarkText": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "enableCartoon": {
+          "type": "boolean"
+        },
+        "enableRealistic": {
+          "type": "boolean"
+        },
+        "enableImageToVideo": {
+          "type": "boolean"
+        },
+        "pricingMode": {
+          "type": "string",
+          "enum": ["free-starter", "freemium"]
+        },
+        "proMonthlyInr": {
+          "type": "integer"
+        },
+        "maintenanceMode": {
+          "type": "boolean"
+        },
+        "updatedBy": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "studioName",
+        "proprietorName",
+        "freeDailyLimit",
+        "watermarkEnabled",
+        "watermarkText",
+        "enableCartoon",
+        "enableRealistic",
+        "enableImageToVideo",
+        "pricingMode",
+        "proMonthlyInr",
+        "maintenanceMode",
+        "updatedBy",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Authenticated user profile document."
+    },
+    "/users/{userId}/private/{docId}": {
+      "schema": { "$ref": "#/entities/UserPrivateInfo" },
+      "description": "Isolated user PII document (email)."
+    },
+    "/users/{userId}/projects/{projectId}": {
+      "schema": { "$ref": "#/entities/VideoProject" },
+      "description": "User-owned AI video storyboard projects."
+    },
+    "/users/{userId}/stats/{statsId}": {
+      "schema": { "$ref": "#/entities/UserUsageStats" },
+      "description": "User generation and export counters."
+    },
+    "/studioConfig/{configId}": {
+      "schema": { "$ref": "#/entities/StudioPublicConfig" },
+      "description": "Global studio configuration managed by Admins."
+    },
+    "/admins/{userId}": {
+      "schema": { "$ref": "#/entities/AdminRecord" },
+      "description": "Explicit admin allowlist documents."
+    }
+  }
+}

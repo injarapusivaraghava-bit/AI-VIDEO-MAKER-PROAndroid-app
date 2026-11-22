@@ -1,0 +1,13 @@
+{
+  "appId": "com.aivideomakerpro.app",
+  "appName": "AI VIDEO MAKER PRO",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false,
+    "backgroundColor": "#0B0D12"
+  }
+}

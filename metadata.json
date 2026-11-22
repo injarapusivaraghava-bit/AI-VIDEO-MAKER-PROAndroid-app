@@ -1,0 +1,6 @@
+{
+  "name": "Kala AI Video Studio",
+  "description": "Bilingual Telugu and English AI Video Maker for YouTube Shorts, AI Cartoons, Realistic Cinema Stories, AI Voiceovers, and Image-to-Video Animation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,346 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // =========================================================
+    // Global Hardened Primitives
+    // =========================================================
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isEmailVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isAdmin() {
+      return isEmailVerified() && (
+        request.auth.token.email == 'injarapusivaraghava@gmail.com' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    // =========================================================
+    // Entity Validation Blueprints (Anti-Update-Gap)
+    // =========================================================
+    function isValidUserProfile(data, userId) {
+      return data.keys().hasAll(['uid', 'displayName', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['uid', 'displayName', 'photoURL', 'createdAt', 'updatedAt'])
+        && data.uid is string
+        && data.uid == userId
+        && data.uid.size() >= 1 && data.uid.size() <= 128
+        && data.displayName is string
+        && data.displayName.size() >= 1 && data.displayName.size() <= 120
+        && (!('photoURL' in data) || (data.photoURL is string && data.photoURL.size() <= 512))
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidPrivateInfo(data, userId) {
+      return data.keys().hasAll(['uid', 'email', 'updatedAt'])
+        && data.keys().hasOnly(['uid', 'email', 'updatedAt'])
+        && data.uid is string
+        && data.uid == userId
+        && data.uid.size() >= 1 && data.uid.size() <= 128
+        && data.email is string
+        && data.email.size() >= 3 && data.email.size() <= 254
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidAdminRecord(data, userId) {
+      return data.keys().hasAll(['uid', 'role', 'createdAt'])
+        && data.keys().hasOnly(['uid', 'role', 'createdAt'])
+        && data.uid is string
+        && data.uid == userId
+        && data.uid.size() >= 1 && data.uid.size() <= 128
+        && data.role is string
+        && data.role == 'admin'
+        && data.createdAt is timestamp;
+    }
+
+    function isValidSceneItem(scene) {
+      return scene is map
+        && scene.id is string
+        && scene.id.size() >= 1 && scene.id.size() <= 128
+        && scene.title is string
+        && scene.title.size() <= 200
+        && scene.narration is string
+        && scene.narration.size() <= 2000
+        && scene.durationSec is number
+        && scene.durationSec >= 1 && scene.durationSec <= 60;
+    }
+
+    function isValidYoutubeSeo(seo) {
+      return seo is map
+        && seo.keys().hasOnly(['title', 'description', 'tags', 'hashtags', 'thumbnailHook', 'uploadedStatus', 'uploadedAt'])
+        && seo.title is string && seo.title.size() <= 200
+        && seo.description is string && seo.description.size() <= 5000
+        && seo.thumbnailHook is string && seo.thumbnailHook.size() <= 160
+        && seo.uploadedStatus in ['draft', 'ready', 'uploaded']
+        && (!('tags' in seo) || (seo.tags is list && seo.tags.size() <= 30))
+        && (!('hashtags' in seo) || (seo.hashtags is list && seo.hashtags.size() <= 15))
+        && (!('uploadedAt' in seo) || (seo.uploadedAt is string && seo.uploadedAt.size() <= 64));
+    }
+
+    function isValidVideoProject(data, userId, projectId) {
+      return data.keys().hasAll([
+          'id', 'ownerId', 'title', 'mode', 'style', 'aspectRatio',
+          'contentLanguage', 'prompt', 'voiceName', 'voiceStyle',
+          'musicTrack', 'musicVolume', 'voiceVolume', 'subtitleStyle',
+          'scenes', 'exportCount', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'ownerId', 'title', 'mode', 'style', 'aspectRatio',
+          'targetDurationSec', 'contentLanguage', 'prompt', 'voiceName',
+          'voiceStyle', 'musicTrack', 'musicVolume', 'voiceVolume',
+          'subtitleStyle', 'scenes', 'youtubeSeo', 'exportCount',
+          'createdAt', 'updatedAt'
+        ])
+        && data.id is string && data.id == projectId && isValidId(data.id)
+        && data.ownerId is string && data.ownerId == userId && data.ownerId.size() <= 128
+        && data.title is string && data.title.size() >= 1 && data.title.size() <= 200
+        && data.mode in ['text-to-video', 'image-to-video', 'cartoon-maker', 'story-maker']
+        && data.style in ['cartoon', 'realistic', 'anime', '3d-render', 'devotional', 'explainer']
+        && data.aspectRatio in ['16:9', '9:16']
+        && (!('targetDurationSec' in data) || (data.targetDurationSec is int && data.targetDurationSec >= 5 && data.targetDurationSec <= 120))
+        && data.contentLanguage in ['te', 'en', 'bilingual']
+        && data.prompt is string && data.prompt.size() <= 2000
+        && data.voiceName in ['Kore', 'Puck', 'Charon', 'Fenrir', 'Zephyr']
+        && data.voiceStyle in ['storyteller', 'cartoon', 'documentary', 'energetic']
+        && data.musicTrack in ['none', 'cinematic-dawn', 'kids-playful', 'devotional-flute', 'shorts-beat', 'calm-documentary']
+        && data.musicVolume is number && data.musicVolume >= 0 && data.musicVolume <= 1
+        && data.voiceVolume is number && data.voiceVolume >= 0 && data.voiceVolume <= 1
+        && data.subtitleStyle in ['cinema', 'shorts-pop', 'minimal', 'off']
+        && data.scenes is list && data.scenes.size() >= 1 && data.scenes.size() <= 15
+        && isValidSceneItem(data.scenes[0])
+        && (!('youtubeSeo' in data) || isValidYoutubeSeo(data.youtubeSeo))
+        && data.exportCount is int && data.exportCount >= 0 && data.exportCount <= 100000
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidUserStats(data, userId) {
+      return data.keys().hasAll([
+          'ownerId', 'totalStoryboards', 'totalVoices', 'totalExports',
+          'totalYouTubePreps', 'todayCount', 'lastResetDate', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'ownerId', 'totalStoryboards', 'totalVoices', 'totalExports',
+          'totalYouTubePreps', 'todayCount', 'lastResetDate', 'updatedAt'
+        ])
+        && data.ownerId is string && data.ownerId == userId && data.ownerId.size() <= 128
+        && data.totalStoryboards is int && data.totalStoryboards >= 0 && data.totalStoryboards <= 1000000
+        && data.totalVoices is int && data.totalVoices >= 0 && data.totalVoices <= 1000000
+        && data.totalExports is int && data.totalExports >= 0 && data.totalExports <= 1000000
+        && data.totalYouTubePreps is int && data.totalYouTubePreps >= 0 && data.totalYouTubePreps <= 1000000
+        && data.todayCount is int && data.todayCount >= 0 && data.todayCount <= 10000
+        && data.lastResetDate is string && data.lastResetDate.size() >= 8 && data.lastResetDate.size() <= 20
+        && data.updatedAt is timestamp;
+    }
+
+    function isValidStudioConfig(data) {
+      return data.keys().hasAll([
+          'studioName', 'proprietorName', 'freeDailyLimit', 'watermarkEnabled',
+          'watermarkText', 'enableCartoon', 'enableRealistic', 'enableImageToVideo',
+          'pricingMode', 'proMonthlyInr', 'maintenanceMode', 'updatedBy', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'studioName', 'proprietorName', 'adminNote', 'freeDailyLimit', 'watermarkEnabled',
+          'watermarkText', 'enableCartoon', 'enableRealistic', 'enableImageToVideo',
+          'pricingMode', 'proMonthlyInr', 'maintenanceMode', 'updatedBy', 'updatedAt'
+        ])
+        && data.studioName is string && data.studioName.size() >= 1 && data.studioName.size() <= 100
+        && data.proprietorName is string && data.proprietorName.size() >= 1 && data.proprietorName.size() <= 100
+        && (!('adminNote' in data) || (data.adminNote is string && data.adminNote.size() <= 500))
+        && data.freeDailyLimit is int && data.freeDailyLimit >= 1 && data.freeDailyLimit <= 1000
+        && data.watermarkEnabled is bool
+        && data.watermarkText is string && data.watermarkText.size() <= 100
+        && data.enableCartoon is bool
+        && data.enableRealistic is bool
+        && data.enableImageToVideo is bool
+        && data.pricingMode in ['free-starter', 'freemium']
+        && data.proMonthlyInr is int && data.proMonthlyInr >= 0 && data.proMonthlyInr <= 100000
+        && data.maintenanceMode is bool
+        && data.updatedBy is string && data.updatedBy.size() >= 1 && data.updatedBy.size() <= 128
+        && data.updatedAt is timestamp;
+    }
+
+    // =========================================================
+    // Collection Rules
+    // =========================================================
+    match /users/{userId} {
+      allow get: if isValidId(userId) && (isOwner(userId) || isAdmin());
+      allow list: if isAdmin();
+
+      allow create: if isEmailVerified()
+        && isValidId(userId)
+        && isOwner(userId)
+        && isValidUserProfile(incoming(), userId)
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+
+      allow update: if isEmailVerified()
+        && isValidId(userId)
+        && isValidUserProfile(incoming(), userId)
+        && incoming().uid == existing().uid
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && (
+          isAdmin() ||
+          (isOwner(userId) && incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'photoURL', 'updatedAt']))
+        );
+
+      allow delete: if isAdmin() && isValidId(userId);
+
+      // Split Collection PII Isolation
+      match /private/{docId} {
+        allow get: if isValidId(userId) && isValidId(docId) && docId == 'info' && (isOwner(userId) || isAdmin());
+        allow list: if false;
+
+        allow create: if isEmailVerified()
+          && isValidId(userId) && isValidId(docId) && docId == 'info'
+          && isOwner(userId)
+          && isValidPrivateInfo(incoming(), userId)
+          && incoming().updatedAt == request.time
+          && exists(/databases/$(database)/documents/users/$(userId));
+
+        allow update: if isEmailVerified()
+          && isValidId(userId) && isValidId(docId) && docId == 'info'
+          && isValidPrivateInfo(incoming(), userId)
+          && incoming().uid == existing().uid
+          && incoming().updatedAt == request.time
+          && (
+            isAdmin() ||
+            (isOwner(userId) && incoming().diff(existing()).affectedKeys().hasOnly(['email', 'updatedAt']))
+          );
+
+        allow delete: if false;
+      }
+
+      // User Video Projects (Master Gate enforces parent user exists)
+      match /projects/{projectId} {
+        allow get: if isValidId(userId) && isValidId(projectId) && (isOwner(userId) || isAdmin());
+        allow list: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isAdmin());
+
+        allow create: if isEmailVerified()
+          && isValidId(userId) && isValidId(projectId)
+          && isOwner(userId)
+          && isValidVideoProject(incoming(), userId, projectId)
+          && incoming().createdAt == request.time
+          && incoming().updatedAt == request.time
+          && exists(/databases/$(database)/documents/users/$(userId));
+
+        allow update: if isEmailVerified()
+          && isValidId(userId) && isValidId(projectId)
+          && isValidVideoProject(incoming(), userId, projectId)
+          && incoming().id == existing().id
+          && incoming().ownerId == existing().ownerId
+          && incoming().createdAt == existing().createdAt
+          && incoming().updatedAt == request.time
+          && (
+            isAdmin() ||
+            (isOwner(userId) && incoming().diff(existing()).affectedKeys().hasOnly([
+              'title', 'mode', 'style', 'aspectRatio', 'targetDurationSec',
+              'contentLanguage', 'prompt', 'voiceName', 'voiceStyle',
+              'musicTrack', 'musicVolume', 'voiceVolume', 'subtitleStyle',
+              'scenes', 'youtubeSeo', 'updatedAt'
+            ])) ||
+            (isOwner(userId) && incoming().diff(existing()).affectedKeys().hasOnly(['exportCount', 'updatedAt'])
+              && incoming().exportCount == existing().exportCount + 1)
+          );
+
+        allow delete: if isEmailVerified()
+          && isValidId(userId) && isValidId(projectId)
+          && (isOwner(userId) || isAdmin());
+      }
+
+      // User Usage Stats
+      match /stats/{statsId} {
+        allow get: if isValidId(userId) && isValidId(statsId) && statsId == 'summary' && (isOwner(userId) || isAdmin());
+        allow list: if false;
+
+        allow create: if isEmailVerified()
+          && isValidId(userId) && isValidId(statsId) && statsId == 'summary'
+          && isOwner(userId)
+          && isValidUserStats(incoming(), userId)
+          && incoming().updatedAt == request.time
+          && exists(/databases/$(database)/documents/users/$(userId));
+
+        allow update: if isEmailVerified()
+          && isValidId(userId) && isValidId(statsId) && statsId == 'summary'
+          && isValidUserStats(incoming(), userId)
+          && incoming().ownerId == existing().ownerId
+          && incoming().updatedAt == request.time
+          && (
+            isAdmin() ||
+            (isOwner(userId) && incoming().diff(existing()).affectedKeys().hasOnly([
+              'totalStoryboards', 'totalVoices', 'totalExports',
+              'totalYouTubePreps', 'todayCount', 'lastResetDate', 'updatedAt'
+            ]))
+          );
+
+        allow delete: if false;
+      }
+    }
+
+    // Global Studio Config (Admin writes, signed-in creators read)
+    match /studioConfig/{configId} {
+      allow get: if isValidId(configId) && configId == 'public' && isSignedIn();
+      allow list: if false;
+
+      allow create: if isAdmin()
+        && isValidId(configId) && configId == 'public'
+        && isValidStudioConfig(incoming())
+        && incoming().updatedBy == request.auth.uid
+        && incoming().updatedAt == request.time;
+
+      allow update: if isAdmin()
+        && isValidId(configId) && configId == 'public'
+        && isValidStudioConfig(incoming())
+        && incoming().updatedBy == request.auth.uid
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly([
+          'studioName', 'proprietorName', 'adminNote', 'freeDailyLimit',
+          'watermarkEnabled', 'watermarkText', 'enableCartoon', 'enableRealistic',
+          'enableImageToVideo', 'pricingMode', 'proMonthlyInr', 'maintenanceMode',
+          'updatedBy', 'updatedAt'
+        ]);
+
+      allow delete: if false;
+    }
+
+    // Trusted Admin Allowlist
+    match /admins/{userId} {
+      allow get: if isValidId(userId) && (isOwner(userId) || isAdmin());
+      allow list: if isAdmin();
+
+      allow create, update: if isAdmin()
+        && isValidId(userId)
+        && isValidAdminRecord(incoming(), userId)
+        && incoming().createdAt == request.time;
+
+      allow delete: if isAdmin() && isValidId(userId) && userId != request.auth.uid;
+    }
+  }
+}
